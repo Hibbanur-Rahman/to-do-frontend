@@ -1,26 +1,42 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import Cookies from "js-cookie"; // Import js-cookie
 
 export const Login = () => {
-
   const [loginData, setLoginData] = useState({
     loginEmail: "",
-    loginPassword: ""
+    loginPassword: "",
   });
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:8000/login", {
         email: loginData.loginEmail,
-        password: loginData.loginPassword
-      })
+        password: loginData.loginPassword,
+      });
+
+      if (response.status === 200) {
+        console.log("Login Successfully and the user:", response.data);
+        toast.success("Login Successfully");
+                // Save token in a cookie
+                Cookies.set("token", response.data.token, { expires: 1 }); // Set expiration to 1 day
+      
+      } else {
+        console.log("login Failed", response.message);
+        toast.error("login failed");
+      }
     } catch (error) {
       console.log("the error message is: ", error);
+      toast.error("login failed");
     }
+  };
 
-  }
   const handleLoginInputChange = (e) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value })
-  }
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  };
 
   return (
     <>
@@ -34,6 +50,9 @@ export const Login = () => {
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
+            value={loginData.loginEmail}
+            onChange={handleLoginInputChange}
+            name="loginEmail"
           />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
@@ -47,14 +66,12 @@ export const Login = () => {
             type="password"
             className="form-control"
             id="exampleInputPassword1"
+            onChange={handleLoginInputChange}
+            value={loginData.loginPassword}
+            name="loginPassword"
           />
         </div>
-        <div className="mb-3 form-check">
-          <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-          <label className="form-check-label" htmlFor="exampleCheck1">
-            Check me out
-          </label>
-        </div>
+
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
@@ -67,28 +84,34 @@ export const SignUp = () => {
   const [registerData, setRegisterData] = useState({
     username: "",
     registerEmail: "",
-    registerPassword: ""
+    registerPassword: "",
   });
 
   const handleRegister = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/register', {
+      const response = await axios.post("http://localhost:8000/register", {
         username: registerData.username,
         email: registerData.registerEmail,
-        password: registerData.registerPassword
+        password: registerData.registerPassword,
       });
-
-
+      if (response.status === 201) {
+        console.log("register Successfully and the user:", response.data);
+        toast.success("register Successfully");
+      } else {
+        console.log("register Failed", response);
+        toast.error("register failed");
+      }
     } catch (error) {
       console.log("the error message is: ", error);
     }
-  }
+  };
   const handleRegisterInputChange = (e) => {
-    setLoginData({ ...registerData, [e.target.name]: e.target.value })
-  }
+    setRegisterData({ ...registerData, [e.target.name]: e.target.value });
+  };
   return (
     <>
-      <form action="/register" method='post' onSubmit={handleRegister}>
+      <form action="/signup" method="post" onSubmit={handleRegister}>
         <div className="mb-3">
           <label htmlFor="username" className="form-label">
             Username
@@ -98,6 +121,9 @@ export const SignUp = () => {
             className="form-control"
             id="username"
             aria-describedby="emailHelp"
+            onChange={handleRegisterInputChange}
+            value={registerData.username}
+            name="username"
           />
         </div>
         <div className="mb-3">
@@ -109,6 +135,9 @@ export const SignUp = () => {
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
+            value={registerData.registerEmail}
+            onChange={handleRegisterInputChange}
+            name="registerEmail"
           />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
@@ -122,9 +151,12 @@ export const SignUp = () => {
             type="password"
             className="form-control"
             id="exampleInputPassword1"
+            onChange={handleRegisterInputChange}
+            value={registerData.registerPassword}
+            name="registerPassword"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button onClick={handleRegister} className="btn btn-primary">
           Submit
         </button>
       </form>
