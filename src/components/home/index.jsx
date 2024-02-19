@@ -12,16 +12,23 @@ export const Home = () => {
   }, []);
 
 
-  const [inputValue, setInputValue] = useState("");
+  const [task, setTaskInput] = useState({
+    taskName:"",
+    completed:false,
+    tags:""
+  });
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  const addTask = () => {
+  const addTask = async (e) => {
     if (inputValue.trim() === "") {
       toast.error("The field cannot be empty.");
     } else {
+      const response= await axios.post('http://localhost:8000/add-Task',{
+          
+      })
       toast.success("New task added.");
       setInputValue("");
     }
