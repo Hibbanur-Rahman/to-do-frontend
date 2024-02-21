@@ -8,11 +8,6 @@ import Cookies from 'js-cookie';
 
 export const Home = () => {
   useEffect(() => {
-    // Get a cookie
-    const cookieValue = Cookies.get('token');
-    console.log(cookieValue);
-  }, []);
-  useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
@@ -23,37 +18,40 @@ export const Home = () => {
   });
 
   const handleInputChange = (e) => {
-    setTaskInput({ ...task, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setTaskInput(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
   const handleTask = async (e) => {
     e.preventDefault();
-    if (task.taskName.trim() === "") {
+    const { taskName } = task;
+    if (!taskName.trim()) {
       toast.error("The task name cannot be empty.");
-    } else {
-      try {
-        const token = Cookies.get('token');
-        const response = await axios.post("http://localhost:8000/add-Task", {
-          taskName: task.taskName,
-          completed: task.completed,
-          tags: task.tags
-        }, {
-          headers: {
-            Authorization: `Bearer ${token}` // Set Authorization header with token
-          }
-        });
-        if (response.status === 200) {
-          toast.success("New task added.");
-          setTaskInput({
-            taskName: "",
-            completed: false,
-            tags: ""
-          });
+      return;
+    }
+
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.post("http://localhost:8000/add-Task", task, {
+        headers: {
+          Authorization: `${token}`
         }
-      } catch (error) {
-        toast.error("Task is not added");
-        console.log("The error message is: ", error);
+      });
+      
+      if (response.status === 200) {
+        toast.success("New task added.");
+        setTaskInput({
+          taskName: "",
+          completed: false,
+          tags: ""
+        });
       }
+    } catch (error) {
+      toast.error("Failed to add task.");
+      console.error("Error adding task:", error);
     }
   };
 
