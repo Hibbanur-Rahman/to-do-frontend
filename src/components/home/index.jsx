@@ -4,8 +4,14 @@ import Loginbg from "../../assets/img/banner.png";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Cookies from 'js-cookie';
 
 export const Home = () => {
+  useEffect(() => {
+    // Get a cookie
+    const cookieValue = Cookies.get('token');
+    console.log(cookieValue);
+  }, []);
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
@@ -26,10 +32,15 @@ export const Home = () => {
       toast.error("The task name cannot be empty.");
     } else {
       try {
+        const token = Cookies.get('token');
         const response = await axios.post("http://localhost:8000/add-Task", {
           taskName: task.taskName,
           completed: task.completed,
           tags: task.tags
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}` // Set Authorization header with token
+          }
         });
         if (response.status === 200) {
           toast.success("New task added.");

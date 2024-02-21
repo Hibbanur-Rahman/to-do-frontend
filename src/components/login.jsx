@@ -76,13 +76,14 @@ const Login = () => {
 
             if (response.status === 200) {
                 console.log("Login Successfully and the user:", response.data);
+                console.log("cookies data is : ",response.data.data.token)
                 toast.success("Login Successfully");
                 // Save token in a cookie
-                Cookies.set("token", response.data.token, { expires: 1 }); // Set expiration to 1 day
-                // Redirect to another page after successful login
-                setTimeout(() => {
-                    window.location.href='/' ;
-                }, 3000);
+                Cookies.set("token", response.data.data.token, { expires: 1 }); // Set expiration to 1 day
+                // // Redirect to another page after successful login
+                // setTimeout(() => {
+                //     window.location.href='/' ;
+                // }, 3000);
             } else {
                 console.log("login Failed", response.message);
                 toast.error("login failed");
