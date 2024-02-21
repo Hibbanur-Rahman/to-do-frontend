@@ -22,12 +22,6 @@ const Header = () => {
     document.body?.classList?.remove("menu-opened");
   };
 
-  const openMobileSubMenu = (e) => {
-    e.preventDefault();
-    setMobileSubMenu(!mobileSubMenu);
-  };
-
-
   const changeHeaderBackground = () => {
     if (window.scrollY >= 90) {
       setNavbar(true);

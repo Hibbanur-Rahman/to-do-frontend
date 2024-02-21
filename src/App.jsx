@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/header";
-import Home from "./components/home";
+import Home from "./components/home/index";
 
 import Register from "./components/register";
 import Login from './components/login';
@@ -20,7 +20,7 @@ function App() {
       <div className="container-fluid m-0 p-0">
 
         <Routes>
-          <Route path='/' element={<Home />}/>
+          <Route exact path='/' element={<Home />}/>
           <Route path="/login" element={<Login />} />
 
           <Route path="/register" element={<Register />} />
