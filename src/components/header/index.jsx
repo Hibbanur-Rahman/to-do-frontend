@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import './style.css'
+import Cookies from "js-cookie";
 
 const Header = () => {
   useEffect(() => {
@@ -31,6 +32,15 @@ const Header = () => {
   };
 
   window.addEventListener("scroll", changeHeaderBackground);
+
+  const [isLoggedIn,setLoggedIn]= useState(false);
+  const token= Cookies.get('token');
+  if(token){
+    setLoggedIn(true);
+  }
+  else{
+    setLoggedIn(false);
+  }
   return (
     <header className="header " style={{background:'blue'}}>
       <div className="header-fixed">
@@ -76,17 +86,35 @@ const Header = () => {
                 </li>
               </ul>
             </div>
+            
             <ul className="nav header-navbar-rht">
-              <li className="nav-item">
-                <Link className="nav-link header-sign" to="/login">
-                  Signin
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link header-login" to="/register">
-                  Signup
-                </Link>
-              </li>
+              {isLoggedIn ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link header-profile" to="/profile">
+                      Profile
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link header-logout" to="/logout">
+                      Logout
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link header-sign" to="/login">
+                      Signin
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link header-login" to="/register">
+                      Signup
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </nav>
