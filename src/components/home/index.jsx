@@ -41,7 +41,7 @@ export const Home = () => {
         }
       });
       
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast.success("New task added.");
         setTaskInput({
           taskName: "",
@@ -49,6 +49,10 @@ export const Home = () => {
           tags: ""
         });
       }
+     else{
+      toast.error("Failed to add task for missing feild.");
+      console.error("Error adding task:",response.message);
+     }
     } catch (error) {
       toast.error("Failed to add task.");
       console.error("Error adding task:", error);
