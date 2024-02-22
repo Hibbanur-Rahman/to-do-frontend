@@ -6,6 +6,8 @@ import Cookies from "js-cookie";
 const Header = () => {
   useEffect(() => {
     document.body?.classList?.remove("menu-opened");
+    const token = Cookies.get('token');
+    setLoggedIn(!!token); // Convert token to a boolean value
     return () => {
       document.body.className = "";
     };
@@ -30,17 +32,12 @@ const Header = () => {
       setNavbar(false);
     }
   };
+  
 
   window.addEventListener("scroll", changeHeaderBackground);
 
-  const [isLoggedIn,setLoggedIn]= useState(false);
-  const token= Cookies.get('token');
-  if(token){
-    setLoggedIn(true);
-  }
-  else{
-    setLoggedIn(false);
-  }
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
   return (
     <header className="header " style={{background:'blue'}}>
       <div className="header-fixed">
@@ -96,7 +93,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link header-logout" to="/logout">
+                    <Link className="nav-link header-logout"  onClick={handleLogout}>
                       Logout
                     </Link>
                   </li>
