@@ -5,6 +5,8 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Cookies from 'js-cookie';
+import TodoItem from "../todoItem";
+
 
 export const Home = () => {
   useEffect(() => {
@@ -59,6 +61,19 @@ export const Home = () => {
     }
   };
 
+  const fetchTasks= async ()=>{
+    try{
+      const token= Cookies.get('token');
+      const response= await axios.get('http://localhost:8000/view-Task',{
+        headers:{
+          Authorization: `${token}`
+        }
+      })
+    }catch(error){
+
+    }
+  }
+
   return (
     <>
       <div className="main-wrapper">
@@ -94,6 +109,8 @@ export const Home = () => {
                     </button>
                   </div>
                 </form>
+
+                <TodoItem/>
               </div>
             </div>
           </div>

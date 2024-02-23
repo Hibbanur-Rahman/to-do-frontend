@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import './style.css'
+import { toast } from "react-toastify";
+import "./style.css";
 import Cookies from "js-cookie";
 
 const Header = () => {
   useEffect(() => {
     document.body?.classList?.remove("menu-opened");
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     setLoggedIn(!!token); // Convert token to a boolean value
     return () => {
       document.body.className = "";
@@ -32,14 +33,24 @@ const Header = () => {
       setNavbar(false);
     }
   };
-  
+
+  const handleLogout = async () => {
+    Cookies.remove("token");
+    toast.success("Logout successfully");
+    setLoggedIn(false); // Update isLoggedIn state to false
+  };
 
   window.addEventListener("scroll", changeHeaderBackground);
 
   const [isLoggedIn, setLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = Cookies.get("token");
+    setLoggedIn(!!token);
+  }, []);
+
   return (
-    <header className="header " style={{background:'blue'}}>
+    <header className="header " style={{ background: "blue" }}>
       <div className="header-fixed">
         <nav
           className={
@@ -57,11 +68,9 @@ const Header = () => {
                   <span />
                 </span>
               </Link>
-             
             </div>
             <div className="main-menu-wrapper">
               <div className="menu-header">
-
                 <Link
                   id="menu_close"
                   className="menu-close"
@@ -73,17 +82,13 @@ const Header = () => {
               </div>
               <ul className="main-nav">
                 <li className="has-submenu active ">
-                  <Link
-                    className={mobileSubMenu ? "submenu" : ""}
-                    to="/"
-                  >
+                  <Link className={mobileSubMenu ? "submenu" : ""} to="/">
                     Home
                   </Link>
-                  
                 </li>
               </ul>
             </div>
-            
+
             <ul className="nav header-navbar-rht">
               {isLoggedIn ? (
                 <>
@@ -93,7 +98,10 @@ const Header = () => {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link header-logout"  onClick={handleLogout}>
+                    <Link
+                      className="nav-link header-logout"
+                      onClick={handleLogout}
+                    >
                       Logout
                     </Link>
                   </li>
