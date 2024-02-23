@@ -5,7 +5,7 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Cookies from 'js-cookie';
-import TodoItem from "../todoItem";
+import TodoItem from "../TodoItem";
 
 
 export const Home = () => {
@@ -13,6 +13,7 @@ export const Home = () => {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
+  const [taskList, setTaskList] = useState([]);
   const [task, setTaskInput] = useState({
     taskName: "",
     completed: false,
@@ -50,6 +51,7 @@ export const Home = () => {
           completed: false,
           tags: ""
         });
+        fetchTasks();
       }
      else{
       toast.error("Failed to add task for missing feild.");
@@ -69,11 +71,21 @@ export const Home = () => {
           Authorization: `${token}`
         }
       })
-    }catch(error){
 
+      if(response.status=== 200){
+        console.log("tasks is : ",response.data);
+        setTaskList(response.data.data); // Assuming tasks are under 'data' key
+      }
+    }catch(error){
+        console.log("error:",error);
+        toast.error("viewed failed");
     }
   }
 
+  useEffect(()=>{
+    const token = Cookies.get("token");
+    fetchTasks();
+  },[])
   return (
     <>
       <div className="main-wrapper">
@@ -109,8 +121,12 @@ export const Home = () => {
                     </button>
                   </div>
                 </form>
-
-                <TodoItem/>
+                {
+                  taskList.map((task, index) => (
+                    
+                    <TodoItem key={index} taskName={task.taskName} />
+                  ))
+                }
               </div>
             </div>
           </div>
