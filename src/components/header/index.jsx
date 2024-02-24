@@ -3,8 +3,34 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./style.css";
 import Cookies from "js-cookie";
-
+import axios from "axios";
 const Header = () => {
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = Cookies.get('token');
+        const response = await axios.get('http://localhost:8000/fetch-user', {
+          headers: {
+            Authorization: `${token}`
+          }
+        });
+
+        if (response.status === 200) {
+          console.log(response.data.user.username );
+          setUser(response.data.user.username);
+        }
+        else {
+          console.log("user is not defined in the token")
+        }
+      } catch (error) {
+        toast.error("user is not defined");
+        console.log("user is not defind, error:", error);
+      }
+    }
+    fetchUserData();
+  }, []);
   useEffect(() => {
     document.body?.classList?.remove("menu-opened");
     const token = Cookies.get("token");
@@ -94,7 +120,7 @@ const Header = () => {
                 <>
                   <li className="nav-item">
                     <Link className="nav-link header-profile" to="/profile">
-                      Profile
+                      {user}
                     </Link>
                   </li>
                   <li className="nav-item">

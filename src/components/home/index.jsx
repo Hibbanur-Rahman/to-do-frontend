@@ -124,7 +124,7 @@ export const Home = () => {
                 {
                   taskList.map((task, index) => (
                     
-                    <TodoItem key={index} taskName={task.taskName} />
+                    <TodoItem keyIndex={index} taskName={task.taskName} />
                   ))
                 }
               </div>

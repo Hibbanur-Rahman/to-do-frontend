@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import {toast} from 'react-toastify';
 
 const TodoItem = (props) => {
 
-    console.log(props.index);
+  // const [keyIndex,setKeyIndex]= useState('');
 
-    const handleCompleted=async (e)=>{
-        const keyIndex=props.index;
+    const handleCompleted=async ()=>{
+
+        // setKeyIndex(props.keyIndex);
+        const keyIndex=props.keyIndex;
         console.log(keyIndex)
         try{
             const token=Cookies.get('token');
-            const response=await axios.post('http://localhost:8000/update-completed',keyIndex,{
+            const response=await axios.post('http://localhost:8000/update-completed',{keyIndex},{
                 headers:{
                     Authorization: `${token}`
                 }
